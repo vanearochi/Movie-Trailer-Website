@@ -1,45 +1,164 @@
+#
 import fresh_tomatoes
 import media
+from urllib2 import Request, urlopen, URLError
+import wikipedia
+from imdb import IMDb
+from wikiapi import WikiApi
+
+toy_story=""
+birdman=""
+the_grand_budapest_hotel=""
+monsters_inc =""
+finding_nemo=""
+wreck_it_ralph=""
+beginners=""
+django_unchained=""
+pulp_fiction=""
+the_lord_of_the_rings_1=""
+the_lord_of_the_rings_2=""
+the_lord_of_the_rings_3=""
+movies = []
+
+movies_var = [toy_story, birdman, the_grand_budapest_hotel, monsters_inc, finding_nemo, wreck_it_ralph, beginners, django_unchained, pulp_fiction, the_lord_of_the_rings_1, the_lord_of_the_rings_2, the_lord_of_the_rings_3]
+
+movie_titles = [{"name":'Toy Story',
+                 "id": "KYz2wyBy3kc"},
+                {"name":"Birdman or (The Unexpected Virtue of Ignorance)",
+                 "id": "uJfLoE6hanc"},
+                {"name":"The Grand Budapest Hotel",
+                 "id":"1Fg5iWmQjwk"},
+                {"name":"Monsters Inc",
+                 "id":"8IBNZ6O2kMk"},
+                {"name":"Finding Nemo",
+                 "id":"2zLkasScy7A"},
+                {"name":"Wreck-it Ralph",
+                 "id":"87E6N7ToCxs"},
+                {"name":"Beginners",
+                 "id":"rXUFUp6vsxg"},
+                {"name":"Django Unchained",
+                "id":"C3VjVMitTbA"},
+                {"name":"Pulp Fiction",
+                 "id":"s7EdQ4FqbhY"},
+                {"name": "The Lord of the Rings: The Fellowship of the Ring",
+                 "id": "V75dMMIW2B4"},
+                {"name": "The Lord of the Rings: The Two Towers",
+                 "id": "LbfMDwc4azU"},
+                {"name": "The Lord of the Rings: The Return of the King",
+                 "id": "r5X-hFf6Bwo"}
+                ]
 
 
-toy_story = media.Movie("Toy Story",
-                        "Story of a boy and his toys that come to life",
-                        "https://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
-                        "https://www.youtube.com/watch?v=KYz2wyBy3kc")
-birdman = media.Movie("Birdman",
-                      "Illustrated upon the progress of his latest Broadway play, a former popular actor's struggle to cope with his current life as a wasted actor is shown.",
-                      "https://upload.wikimedia.org/wikipedia/en/6/63/Birdman_poster.png",
-                      "https://www.youtube.com/watch?v=uJfLoE6hanc")
-the_grand_budapest_hotel = media.Movie("The Grand Budapest Hotel",
-                                       "The adventures of Gustave H, a legendary concierge at a famous hotel from the fictional Republic of Zubrowka between the first and second World Wars, and Zero Moustafa, the lobby boy who becomes his most trusted friend.",
-                                       "https://upload.wikimedia.org/wikipedia/en/a/a6/The_Grand_Budapest_Hotel_Poster.jpg",
-                                       "https://www.youtube.com/watch?v=1Fg5iWmQjwk")
-the_lord_of_the_rings_1 = media.Movie("The Lord of the Rings:<br>The Fellowship of the Ring",
-                                      "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle Earth from the Dark Lord Sauron.",
-                                      "https://upload.wikimedia.org/wikipedia/en/9/9d/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_%282001%29_theatrical_poster.jpg",
-                                      "https://www.youtube.com/watch?v=V75dMMIW2B4")
-the_lord_of_the_rings_2 = media.Movie("The Lord of the Rings:<br> The Two Towers",
-                                      "While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.",
-                                      "https://upload.wikimedia.org/wikipedia/en/9/9d/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_%282001%29_theatrical_poster.jpg",
-                                      "https://www.youtube.com/watch?v=LbfMDwc4azU")
-the_lord_of_the_rings_3 = media.Movie("The Lord of the Rings:<br>The Return of the King",
-                                      "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.",
-                                      "https://upload.wikimedia.org/wikipedia/en/9/9d/Lord_of_the_Rings_-_The_Return_of_the_King.jpg",
-                                      "https://www.youtube.com/watch?v=r5X-hFf6Bwo")
 
-monsters_inc = media.Movie("Monsters Inc.",
-                           "In order to power the city, monsters have to scare children so that they scream. However, the children are toxic to the monsters, and after a child gets through, two monsters realize things may not be what they think.",
-                           "https://upload.wikimedia.org/wikipedia/en/6/63/Monsters_Inc.JPG",
-                           "https://www.youtube.com/watch?v=8IBNZ6O2kMk")
-ratatouille = media.Movie("Ratatouille",
-                          "A rat who can cook makes an unusual alliance with a young kitchen worker at a famous restaurant.",
-                          "https://upload.wikimedia.org/wikipedia/en/5/50/RatatouillePoster.jpg",
-                          "https://www.youtube.com/watch?v=87q0RD5R4Us")
-moulin_rouge = media.Movie("Moulin Rouge",
-                           "A poet falls for a beautiful courtesan whom a jealous duke covets in this stylish musical, with music drawn from familiar 20th century sources.",
-                           "https://upload.wikimedia.org/wikipedia/en/9/9f/Moulin_rouge_poster.jpg",
-                           "https://www.youtube.com/watch?v=2PpgPxjzbkA")
+#ass = ia.update(peli)
 
 
-movies = [toy_story, birdman, the_grand_budapest_hotel, monsters_inc, ratatouille, moulin_rouge, the_lord_of_the_rings_1, the_lord_of_the_rings_2, the_lord_of_the_rings_3]
+
+#b = ia.get_movie(a[0].id)
+#for item in a:
+     #print item['long imdb canonical title']
+    #movie_id =item.movieID
+    #b = ia.get_movie_plot(movie_id)
+    #print b
+
+
+
+def create_Movie_instance(movie_object):
+    # type: (object) -> object
+
+    movie_title = movie_object["name"]
+    youtube_id = movie_object["id"]
+    #print  youtube_id
+    youtube_root = "https://www.youtube.com/watch?v="
+    youtube_link = youtube_root + youtube_id
+    #print youtube_link
+    imdb = IMDb()
+
+    movie_search = imdb.search_movie(movie_title)
+    movie_id = movie_search[0].getID()
+    #print movie_search[0].smartCanonicalTitle()
+    name_long= movie_search[0]
+    print name_long
+    plot = imdb.get_movie_plot(movie_id)
+    plot_object = plot.__getitem__("data")
+    plot_text = plot_object['plot'][0]
+    #print plot_text
+
+    #wikipage = wikipedia.page(page)
+
+    #print plot_object.__getitem__("plot")
+    review = imdb.get_movie_critic_reviews(movie_id)
+    #print review
+    #print imdb.get_movie_episodes_cast
+
+
+
+
+
+        #$print long_title
+
+
+
+
+        #imdb_init = IMDb()
+        #print imdb_init.g
+    wiki= WikiApi()
+    results = wiki.find(movie_title)
+    print results
+    #print name_long
+    #print results
+    article = wiki.get_article(results[0])
+    print article
+    wiki_image = article.image
+    print article.heading
+
+    #print wiki_image
+
+    return media.Movie(name_long, plot_text, wiki_image, youtube_link)
+        #print wiki_plot.summary
+        #return wiki_plot
+
+    #wiki_search_id = WikipediaPage(title= movie_title, pageid = wiki_plot.pageid)
+    #print wiki_search_id.images
+
+#wiki_search("toy story")
+#wikipage= wikipedia.page(page)
+#print wiki.title
+#print wiki.url
+#print wiki.image
+#print wiki
+
+#create_Movie_instance("monsters inc")
+i = 0
+for movie_obj in movie_titles:
+    movies_var[i]=create_Movie_instance(movie_obj)
+    movies.append(movies_var[i])
+    i = i + 1
+    print movies
+    #print movies_var[i]
+
+#movies=[toy_story]
+
+
+
+#Movie instances
+#toy_story = create_Movie_instance(movie_titles[0])
+#print toy_story.title
+#birdman = create_Movie_instance(movie_titles[1])
+#the_grand_budapest_hotel = create_Movie_instance(movie_titles[2])
+#the_lord_of_the_rings_1 = create_Movie_instance(movie_titles[3])
+#the_lord_of_the_rings_2 = create_Movie_instance(movie_titles[4])
+#the_lord_of_the_rings_3 = create_Movie_instance(movie_titles[5])
+
+#monsters_inc = create_Movie_instance(movie_titles[6])
+#ratatouille = create_Movie_instance(movie_titles[7])
+#moulin_rouge = create_Movie_instance(movie_titles[8])
+#a = create_Movie_instance(movie_titles[9])
+#b = create_Movie_instance(movie_titles[10])
+#c = create_Movie_instance(movie_titles[11])
+
+
+#Array of movie instances pass to
+#movies = [toy_story, birdman, the_grand_budapest_hotel, monsters_inc, ratatouille, moulin_rouge, beginners, sin_city, the_lord_of_the_rings_1, the_lord_of_the_rings_2, the_lord_of_the_rings_3, a, b, c]
+#movies=[toy_story]
 fresh_tomatoes.open_movies_page(movies)

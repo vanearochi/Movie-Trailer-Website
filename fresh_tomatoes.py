@@ -139,7 +139,7 @@ movie_tile_content = '''
     <h2>{movie_title}</h2>
 </div>
 '''
-
+##TODO make a hamburguer menu for movie data displaying  and hide everything en the page 
 def create_movie_tiles_content(movies):
     # The HTML content for this section of the page
     content = ''
