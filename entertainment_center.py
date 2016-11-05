@@ -1,11 +1,14 @@
-#
+#We need this files
 import fresh_tomatoes
 import media
 from urllib2 import Request, urlopen, URLError
 import wikipedia
+# We need this modules to obtain movies information
 from imdb import IMDb
 from wikiapi import WikiApi
 
+#Defining variables to create Movie instances
+cowspiracy=""
 toy_story=""
 birdman=""
 the_grand_budapest_hotel=""
@@ -18,11 +21,20 @@ pulp_fiction=""
 the_lord_of_the_rings_1=""
 the_lord_of_the_rings_2=""
 the_lord_of_the_rings_3=""
+
 movies = []
 
-movies_var = [toy_story, birdman, the_grand_budapest_hotel, monsters_inc, finding_nemo, wreck_it_ralph, beginners, django_unchained, pulp_fiction, the_lord_of_the_rings_1, the_lord_of_the_rings_2, the_lord_of_the_rings_3]
+#We store the variables above in a list.
+movie_instances_name = [cowspiracy, toy_story, birdman, the_grand_budapest_hotel,
+                        monsters_inc, finding_nemo, wreck_it_ralph, beginners,
+                        django_unchained, pulp_fiction, the_lord_of_the_rings_1,
+                        the_lord_of_the_rings_2, the_lord_of_the_rings_3]
 
-movie_titles = [{"name":'Toy Story',
+#This list contains the information of movies
+# that we need to begin the search in the modules imported
+movies_info= [ {"name": "Cowspiracy",
+                 "id": "nV04zyfLyN4"},
+               {"name":'Toy Story',
                  "id": "KYz2wyBy3kc"},
                 {"name":"Birdman or (The Unexpected Virtue of Ignorance)",
                  "id": "uJfLoE6hanc"},
@@ -48,117 +60,61 @@ movie_titles = [{"name":'Toy Story',
                  "id": "r5X-hFf6Bwo"}
                 ]
 
-
-
-#ass = ia.update(peli)
-
-
-
-#b = ia.get_movie(a[0].id)
-#for item in a:
-     #print item['long imdb canonical title']
-    #movie_id =item.movieID
-    #b = ia.get_movie_plot(movie_id)
-    #print b
-
-
-
-def create_Movie_instance(movie_object):
-    # type: (object) -> object
+#This function creates search movie information on modules,
+#creates Movie instances with it and return them
+def get_Movie_instance(movie_object):
 
     movie_title = movie_object["name"]
     youtube_id = movie_object["id"]
-    #print  youtube_id
     youtube_root = "https://www.youtube.com/watch?v="
     youtube_link = youtube_root + youtube_id
-    #print youtube_link
     imdb = IMDb()
-
     movie_search = imdb.search_movie(movie_title)
-    movie_id = movie_search[0].getID()
-    #print movie_search[0].smartCanonicalTitle()
-    name_long= movie_search[0]
-    print name_long
-    plot = imdb.get_movie_plot(movie_id)
-    plot_object = plot.__getitem__("data")
-    plot_text = plot_object['plot'][0]
-    #print plot_text
+    first_match =  movie_search[0]
+    imdb.update(first_match)
+    movie_data = first_match.data
+    movie_director = get_info_from_list(movie_data['director'], "name")
+    movie_writer = get_info_from_list(movie_data['writer'], "name")
+    movie_cast = get_info_from_list(movie_data['cast'], "name")
+    movie_rating = str(movie_data['rating'])
+    movie_rating = movie_rating.encode('utf-8')
+    movie_genres = get_info_from_list(movie_data['genres'], "no_key")
+    movie_plot = get_info_from_list(movie_data['plot'], "no_key")
+    wikipedia_api= WikiApi()
+    wikipedia_results = wikipedia_api.find(movie_title)
+    wikipedia_first_match = wikipedia_api.get_article(wikipedia_results[0])
+    wikipedia_image = wikipedia_first_match.image
+    wikipedia_link = wikipedia_first_match.url
 
-    #wikipage = wikipedia.page(page)
+    return media.Movie(movie_title, movie_plot, wikipedia_image,
+                       youtube_link, movie_director, wikipedia_link,
+                       movie_writer, movie_cast, movie_genres, movie_rating)
 
-    #print plot_object.__getitem__("plot")
-    review = imdb.get_movie_critic_reviews(movie_id)
-    #print review
-    #print imdb.get_movie_episodes_cast
+#Gets information from a list
+#iterating over it
+def get_info_from_list(movie_data_list, key):
+    movie_data_list_length = len(movie_data_list)
+    if movie_data_list_length > 5:
+        movie_data_list = movie_data_list[:5]
+    movie_info=""
 
+    for movie_data in movie_data_list:
+        if key == "no_key":
+            movie_info = movie_info + ", " + movie_data
+        else:
+            movie_info = movie_info + ", " + movie_data[key]
 
+    movie_info = movie_info[2:] + "."
+    movie_info = movie_info.encode('utf-8')
+    return movie_info
 
-
-
-        #$print long_title
-
-
-
-
-        #imdb_init = IMDb()
-        #print imdb_init.g
-    wiki= WikiApi()
-    results = wiki.find(movie_title)
-    print results
-    #print name_long
-    #print results
-    article = wiki.get_article(results[0])
-    print article
-    wiki_image = article.image
-    print article.heading
-
-    #print wiki_image
-
-    return media.Movie(name_long, plot_text, wiki_image, youtube_link)
-        #print wiki_plot.summary
-        #return wiki_plot
-
-    #wiki_search_id = WikipediaPage(title= movie_title, pageid = wiki_plot.pageid)
-    #print wiki_search_id.images
-
-#wiki_search("toy story")
-#wikipage= wikipedia.page(page)
-#print wiki.title
-#print wiki.url
-#print wiki.image
-#print wiki
-
-#create_Movie_instance("monsters inc")
-i = 0
-for movie_obj in movie_titles:
-    movies_var[i]=create_Movie_instance(movie_obj)
-    movies.append(movies_var[i])
+i=0
+#Iterates over movie_info and movie_instances_name
+#Assigns instance to variable
+for movie_information in movies_info:
+    movie_instances_name[i]=get_Movie_instance(movie_information)
+    movies.append(movie_instances_name[i])
     i = i + 1
-    print movies
-    #print movies_var[i]
 
-#movies=[toy_story]
-
-
-
-#Movie instances
-#toy_story = create_Movie_instance(movie_titles[0])
-#print toy_story.title
-#birdman = create_Movie_instance(movie_titles[1])
-#the_grand_budapest_hotel = create_Movie_instance(movie_titles[2])
-#the_lord_of_the_rings_1 = create_Movie_instance(movie_titles[3])
-#the_lord_of_the_rings_2 = create_Movie_instance(movie_titles[4])
-#the_lord_of_the_rings_3 = create_Movie_instance(movie_titles[5])
-
-#monsters_inc = create_Movie_instance(movie_titles[6])
-#ratatouille = create_Movie_instance(movie_titles[7])
-#moulin_rouge = create_Movie_instance(movie_titles[8])
-#a = create_Movie_instance(movie_titles[9])
-#b = create_Movie_instance(movie_titles[10])
-#c = create_Movie_instance(movie_titles[11])
-
-
-#Array of movie instances pass to
-#movies = [toy_story, birdman, the_grand_budapest_hotel, monsters_inc, ratatouille, moulin_rouge, beginners, sin_city, the_lord_of_the_rings_1, the_lord_of_the_rings_2, the_lord_of_the_rings_3, a, b, c]
-#movies=[toy_story]
+#Calls functions that creates and open web page
 fresh_tomatoes.open_movies_page(movies)

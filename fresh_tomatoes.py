@@ -19,11 +19,8 @@ main_page_head = '''
             padding-top: 80px;
             font-family: 'Muli', sans-serif;
         }
-        a.display-1 {
+        a.display-5 {
             text-decoration: none !important;
-            color: black;
-        }
-        a.display-1:hover {
             color:white;
         }
         h2 {
@@ -48,6 +45,7 @@ main_page_head = '''
         .movie-tile {
             margin-bottom: 20px;
             padding-top: 20px;
+            display: block !important;
         }
         .movie-tile:hover {
             background-color: #EEE;
@@ -66,6 +64,14 @@ main_page_head = '''
             top: 0;
             background-color: white;
         }
+        .storyline {
+            height: 15% !important;
+            overflow: scroll !important;
+        }
+        .movie-data{
+            color: #228b22;
+        }
+
     </style>
     <script type="text/javascript" charset="utf-8">
         // Pause the video when the modal is closed
@@ -116,17 +122,19 @@ main_page_content = '''
     </div>
     
     <!-- Main Page Content -->
-    <div class="container">
-      <div class="navbar navbar-fixed-top" style = "background-color: red" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar navbar-fixed-top" style = "background-color: #228b22" role="navigation">
         <div class="container">
           <div class="">
-            <h1><a class="display-1" href="#">Fresh Tomatoes Movie Trailers</a></h1>
+            <h1><a class="display-5" href="#">Fresh Tomatoes Movie Trailers</a></h1>
           </div>
         </div>
       </div>
     </div>
     <div class="container">
-      {movie_tiles}
+        <div class="row">
+            {movie_tiles}
+        </div>
     </div>
   </body>
 </html>
@@ -134,12 +142,22 @@ main_page_content = '''
 
 # A single movie entry html template
 movie_tile_content = '''
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
-    <img src="{poster_image_url}" width="220" height="342">
-    <h2>{movie_title}</h2>
+<div class="col-sm-12">
+    <div class="col-sm-6 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
+        <img src="{poster_image_url}" width="220" height="342">
+    </div>
+    <div class="col-md-6 movie-info">
+        <h2>{movie_title}</h2>
+        <p class="movie-data"><b>Plot</b></p>
+        <p class="storyline">{storyline}</p>
+        <p><span class="movie-data"><b>Director:</b></span> {director}</p>
+        <p><span class="movie-data"<b>Writer:</b></span> {writer}</p>
+        <p><span class="movie-data"<b>Main Cast:</b></span> {cast}</p>
+        <p><span class="movie-data"<b>Rating:</b></span> {rating}</p>
+    </div>
 </div>
 '''
-##TODO make a hamburguer menu for movie data displaying  and hide everything en the page 
+##TODO make a hamburguer menu for movie data displaying  and hide everything en the page
 def create_movie_tiles_content(movies):
     # The HTML content for this section of the page
     content = ''
@@ -153,7 +171,12 @@ def create_movie_tiles_content(movies):
         content += movie_tile_content.format(
             movie_title=movie.title,
             poster_image_url=movie.poster_image_url,
-            trailer_youtube_id=trailer_youtube_id
+            trailer_youtube_id=trailer_youtube_id,
+            storyline=movie.storyline,
+            director=movie.director,
+            writer=movie.writer,
+            cast=movie.main_cast,
+            rating=movie.rating
         )
     return content
 
