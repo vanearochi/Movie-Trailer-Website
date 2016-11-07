@@ -78,14 +78,12 @@ main_page_head = '''
         $(document).on('click', '.hanging-close, .modal-backdrop, .modal', function (event) {
             // Remove the src so the player itself gets removed, as this is the only
             // reliable way to ensure the video stops playing in IE
-            console.log("first click")
             $("#trailer-video-container").empty();
         });
         // Start playing the video whenever the trailer modal is opened
         $(document).on('click', '.movie-tile', function (event) {
             var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
             var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
-            console.log("secod click")
             $("#trailer-video-container").empty().append($("<iframe></iframe>", {
               'id': 'trailer-video',
               'type': 'text-html',
@@ -141,6 +139,7 @@ main_page_content = '''
 '''
 
 # A single movie entry html template
+# Layout changed to add movie information
 movie_tile_content = '''
 <div class="col-sm-12">
     <div class="col-sm-6 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
@@ -157,7 +156,6 @@ movie_tile_content = '''
     </div>
 </div>
 '''
-##TODO make a hamburguer menu for movie data displaying  and hide everything en the page
 def create_movie_tiles_content(movies):
     # The HTML content for this section of the page
     content = ''

@@ -5,6 +5,7 @@ class Movie():
     Represents a movie
     """
 
+    #Define Movie Class variables.
     def __init__(self, movie_title, movie_storyline, poster_image,
                  trailer_youtube, movie_director, wikipedia_link,
                  movie_writer, movie_cast, movie_genres, movie_rating):
