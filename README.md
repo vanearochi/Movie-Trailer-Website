@@ -13,9 +13,9 @@ http://imdbpy.sourceforge.net/
 
 4. Install wiki-api:
 
-```
-$ pip install wikiapi
-```
+    ```
+    $ pip install wikiapi
+    ```
 
 5. From the project's root directory run
    
